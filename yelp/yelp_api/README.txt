@@ -1,12 +1,12 @@
 Yelp API 2.x for Drupal 7.x
 ----------------------------
-The Yelp API module provides the nessisary functions and hooks to query the Yelp
+The Yelp API module provides the necessary functions and hooks to query the Yelp
 API and return results.
 
 Installation
 ------------
 The Yelp API module can be installed like any other Drupal module -- place it
-in the modules directory for your site and enable it on the 'admin/build/modules'
+in the modules directory for your site and enable it on the 'admin/modules'
 page.  To take full advantage of the Yelp API module, you should enable the
 'Yelp Blocks' module as well.
 
@@ -20,8 +20,8 @@ Yelp API provides integration with the following modules:
 Yelp Images
 -----------
 - Per Yelps terms of use, whenever results from Yelp are displayed the Yelp logo 
-must also be displayed. The Yelp API module provides all available Yelp logo images, 
-and they can be found in the 'yelp-images' directory.
+must also be displayed. The Yelp API module provides all available Yelp logo
+images, and they can be found in the 'yelp-images' directory.
 
 - To display a yelp image you should use the 'drupal_get_path()' function
 
