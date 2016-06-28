@@ -1,17 +1,20 @@
 <?php
 
+namespace Drupal\captcha_keypad\Form;
+
 /**
  * @file
  * Contains \Drupal\captcha_keypad\Form\CaptchaKeypadSettingsForm.
  */
-
-namespace Drupal\captcha_keypad\Form;
 
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
+/**
+ * Captcha settings form.
+ */
 class CaptchaKeypadSettingsForm extends ConfigFormBase {
 
   /**
@@ -46,7 +49,10 @@ class CaptchaKeypadSettingsForm extends ConfigFormBase {
     return ['captcha_keypad.settings'];
   }
 
-  public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  /**
+   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['captcha_keypad_code_size'] = [
       '#type' => 'textfield',
       '#title' => t('Code size'),
@@ -78,7 +84,7 @@ class CaptchaKeypadSettingsForm extends ConfigFormBase {
       $form_ids['user_login_form'] = t('User: Login');
       $form_ids['user_login_block'] = t('User: Login block');
     }
-    $comment_types = \Drupal\comment\Entity\CommentType::loadMultiple();
+    $comment_types = CommentType::loadMultiple();
     foreach ($comment_types as $id => $item) {
       $form_ids['comment_' . $id . '_form'] = t('Comment: :item', array(':item' => $item->getDescription()));
     }
@@ -94,13 +100,19 @@ class CaptchaKeypadSettingsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-  public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-    \Drupal::configFactory()->getEditable('captcha_keypad.settings')->set('captcha_keypad_forms', $form_state->getValue([
-      'captcha_keypad_forms'
-      ]))->save();
+  /**
+   * Implements \Drupal\Core\Form\FormInterface:validateForm()
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    \Drupal::configFactory()->getEditable('captcha_keypad.settings')
+      ->set('captcha_keypad_forms', $form_state->getValue(['captcha_keypad_forms']))
+      ->save();
   }
 
-  public function _submitForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  /**
+   * Implements \Drupal\Core\Form\FormInterface:submitForm()
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
 
   }
 
