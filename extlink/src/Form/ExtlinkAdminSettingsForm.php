@@ -13,7 +13,7 @@ class ExtlinkAdminSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'extlink_admin_settings';
   }
 
