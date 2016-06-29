@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for the CSS menu module.
+ */
+
+/**
+ * Test and report CSS menu installation requirements.
+ *
+ * @param string $phase
+ *   The current system installation phase.
+ *
+ * @return array
+ *   An array of system requirements.
+ */
+function cssmenu_requirements($phase) {
+  // Ensure translations don't break at install time.
+  $t = get_t();
+
+  $requirements = array();
+
+  if ('install' == $phase) {
+    $flag = TRUE;
+    $path = 'sites/all/libraries/colorpicker';
+    // Check required library is available or not.
+    if (!is_file($path . '/js/colorpicker.js') || !is_file($path . '/css/colorpicker.css')) {
+      $description = '<p>' . $t('CSS menu not installed') . '</p>';
+      $description .= '<p>' . $t('You are missing the required files for the CSS menu. Please download the <a href="@colorpicker.zip">colorpicker.zip</a> and unzip the css, js and images folders to !colorpicker_path.',
+          array(
+            '@colorpicker.zip' => url('http://www.eyecon.ro/colorpicker/', array('external' => TRUE)),
+            '!colorpicker_path' => $path,
+          )
+        ) . '</p>';
+
+      $requirements['cssmenu'] = array(
+        'title' => $t('Required files missing.'),
+        'description' => $description,
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ */
+function cssmenu_schema() {
+  $schema['cssmenu'] = array(
+    'fields' => array(
+      'mid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'disp-width' => '11',
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => '2048',
+        'not null' => TRUE,
+      ),
+      'menu' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+      ),
+      'menu_details' => array(
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => TRUE,
+      ),
+      'style_sheet' => array(
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('mid'),
+  );
+  return $schema;
+}

@@ -1,0 +1,259 @@
+<?php
+
+/**
+ * @file
+ * Enable CSS menu and menu style configuration.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function cssmenu_help($path, $arg) {
+  switch ($path) {
+    case 'admin/structure/cssmenu':
+      $output = '<p>' . t('This is a simple module that enables the site to have fully configurable CSS menus for site.') . '</p>';
+      $output .= '<p>' . t('Remember to configure the CSS menus blocks in <a href="@block">admin/structure/block</a>.', array('@block' => url('admin/structure/block'))) . '</p>';
+      return $output;
+
+    case 'admin/structure/cssmenu/add':
+    case 'admin/structure/cssmenu/edit/%':
+      return '<p>' . t('Remember that your changes will not be saved until you click the Save button.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function cssmenu_init() {
+  $file_path = file_default_scheme() . '://';
+  drupal_add_css($file_path . '/cssmenu/cssmenu.css');
+}
+
+/**
+ * Implements hook_menu().
+ */
+function cssmenu_menu() {
+  $items = array();
+  $items['admin/structure/cssmenu'] = array(
+    'title' => 'CSS menu',
+    'description' => 'CSS menu using simple and configurable options.',
+    'access arguments' => array('administer css menu overview'),
+    'page callback' => 'cssmenu_overview_page',
+    'file' => 'cssmenu.admin.inc',
+  );
+  $items['admin/structure/cssmenu/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/structure/cssmenu/add'] = array(
+    'title' => 'Add',
+    'page callback' => 'cssmenu_overview_form',
+    'page arguments' => array('add'),
+    'access arguments' => array('add css menu'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+    'file' => 'cssmenu.admin.inc',
+  );
+  $items['admin/structure/cssmenu/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'cssmenu_overview_form',
+    'page arguments' => array('edit', 4),
+    'access arguments' => array('edit css menu'),
+    'file' => 'cssmenu.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_xmlrpc().
+ */
+function cssmenu_xmlrpc() {
+  return array(
+    'GetMenuPreview' => '_cssmenu_preview',
+  );
+}
+
+/**
+ * Implements hook_perm().
+ */
+function cssmenu_perm() {
+  return array(
+    'administer css menu overview', 'add css menu', 'edit css menu', 'delete css menu',
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function cssmenu_theme() {
+  return array(
+    'cssmenu' => array(
+      'arguments' => array(),
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function cssmenu_block_info() {
+  $result = db_select('cssmenu', 'c')
+    ->fields('c', array('mid', 'title'))
+    ->execute();
+  $blocks = array();
+  while ($list = $result->fetch()) {
+    $blocks[$list->mid] = array(
+      'info' => t('CSS menu (@title)', array('@title' => $list->title)),
+      'cache' => DRUPAL_NO_CACHE,
+    );
+  }
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * Generates a block containing the menu
+ */
+function cssmenu_block_view($delta = '') {
+  $block['content'] = _cssmenu_get_menu($delta);
+  return $block;
+}
+
+/**
+ * Helper function for cssmenu_block.
+ *
+ * @param int $mid
+ *   Menu id to render block.
+ *
+ * @return string
+ *   Theme HTML.
+ *
+ * @ingroup cssmenu_block()
+ *
+ * @see _cssmenu_get_clean_string()
+ * @see _cssmenu_overview_tree_form()
+ */
+function _cssmenu_get_menu($mid) {
+  $data = db_select('cssmenu', 'c')
+    ->fields('c', array('title', 'menu'))
+    ->condition('mid', $mid)
+    ->execute()
+    ->fetch();
+
+  // Loads the full menu array.
+  $tree = menu_tree_all_data($data->menu);
+
+  $menu_name = _cssmenu_get_clean_string($data->title . '-' . $data->menu);
+  return theme('cssmenu', array('tree_html' => _cssmenu_overview_tree_form($tree), 'menu_name' => $menu_name));
+}
+
+/**
+ * Helper function for _cssmenu_get_menu.
+ *
+ * Generate menu HTML.
+ *
+ * @param array $tree
+ *   An array of block title and menu links.
+ *
+ * @return string
+ *   Theme HTML.
+ *
+ * @ingroup _cssmenu_get_menu()
+ * @ingroup _cssmenu_overview_tree_form()
+ */
+function _cssmenu_overview_tree_form($tree) {
+  $output = '';
+  foreach ($tree as $data) {
+    $item = $data['link'];
+    if ($item && $item['hidden'] == 0) {
+      $output .= '<li>';
+
+      (0 == $item['plid']) ? ($class = 'parent') : ($class = 'child');
+
+      $attributes = array('attributes' => array('class' => array($class)));
+      $output .= l($item['title'], $item['href'], $attributes);
+
+      if ($data['below']) {
+        $output .= '<ul>' . _cssmenu_overview_tree_form($data['below']) . '</ul>';
+      }
+
+      $output .= '</li>';
+    }
+  }
+  return $output;
+}
+
+/**
+ * Theme to render CSS menu block.
+ *
+ * @param string $tree_html
+ *   A HTML of menu links.
+ *
+ * @return string
+ *   Theme HTML.
+ *
+ * @ingroup themeable
+ */
+function theme_cssmenu($variables) {
+  $html = '<div class="cssmenu"><div class="' . $variables['menu_name'] . '">';
+  $html .= '<ul class="cssmenu">' . $variables['tree_html'] . '</ul>';
+  $html .= '</div></div>';
+  return $html;
+}
+
+/**
+ * Render CSS menu block for preview at run time.
+ *
+ * @param string $key
+ *   Comma-separated list of property keys to generate the menu preview.
+ *
+ * @param string $value
+ *   Comma-separated list of property values to generate the menu preview.
+ *
+ * @return string
+ *   Theme HTML to render preview.
+ *
+ * @ingroup cssmenu_xmlrpc()
+ *
+ * @see _cssmenu_get_clean_string()
+ * @see _cssmenu_get_style_sheet()
+ * @see _cssmenu_overview_tree_form()
+ */
+function _cssmenu_preview($key, $value) {
+
+  $key = explode(',', $key);
+  $value = explode(',', $value);
+
+  $menu_details = array();
+  for ($i = 0; $i < count($key); $i++) {
+    $menu_details[$key[$i]] = $value[$i];
+  }
+
+  $menu_title = _cssmenu_get_clean_string($menu_details['menu_title']);
+
+  module_load_include('inc', 'cssmenu', 'cssmenu.admin');
+  $css = '<style>' . _cssmenu_get_style_sheet($menu_details, "preview-{$menu_title}-{$menu_details['menu']}") . '</style>';
+
+  $tree = menu_tree_all_data($menu_details['menu']);
+  return $css . theme('cssmenu', array('tree_html' => _cssmenu_overview_tree_form($tree), 'menu_name' => "preview-{$menu_title}-{$menu_details['menu']}"));
+}
+
+/**
+ * Returns an alphanumeric string in lowercase.
+ *
+ * @param string $text
+ *   String to remove non-alphanumeric characters from.
+ *
+ * @return string
+ *   alphanumeric string.
+ *
+ * @ingroup _cssmenu_get_style_sheet()
+ * @ingroup _cssmenu_get_menu()
+ * @ingroup _cssmenu_preview()
+ */
+function _cssmenu_get_clean_string($text) {
+  $text = strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $text));
+  return preg_replace('/(-){2,}|^(-)/', '-', $text);
+}

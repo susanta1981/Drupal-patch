@@ -1,0 +1,12 @@
+name = CSS menu
+description = CSS Menu enables ability to styled and placed a menu.
+dependencies[] = menu
+dependencies[] = libraries
+core = 7.x
+version = 7.x-1.x
+; Information added by drupal.org packaging script on 2012-11-22
+version = "7.x-1.0-rc1"
+core = "7.x"
+project = "cssmenu"
+datestamp = "1353597108"
+

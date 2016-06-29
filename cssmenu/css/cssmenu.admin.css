@@ -1,0 +1,40 @@
+.menu_wrapper  .form-item,
+.menu_style .form-item,
+.menu_text_transform  .form-item,
+.menu_item_text_transform  .form-item {
+  float: left;
+  padding-right: 10px !important;
+}
+
+.form-item .description {
+  clear: both;
+}
+
+#menu_preview,
+#menu_preview_wrapper,
+.preview_link {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+#menu_preview_wrapper {
+  display: inline-block;
+  margin: 40px 0 10px;
+  width: 100%;
+}
+
+.clear {
+  clear: both;
+}
+
+.inline {
+  display: inline;
+}
+
+.fleft {
+  float: left;
+}
+
+.colorfield {
+  width: 300px;
+}

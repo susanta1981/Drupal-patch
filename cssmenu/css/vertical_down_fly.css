@@ -1,0 +1,111 @@
+.cssmenu .@menu_class {
+  overflow: hidden;
+}
+
+.cssmenu .@menu_class ul.cssmenu {
+  float: left;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 597;
+}
+
+.cssmenu .@menu_class ul.cssmenu li {
+  background-color: @menu_bgcolor !important;
+  background-image: none !important;
+  border: 0px solid !important;
+  display: block !important;
+  float: left;
+  line-height: normal !important;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0 !important;
+  padding: 0px !important;
+  text-transform: @menu_text_transform !important;
+  vertical-align: middle;
+  zoom: 1;
+}
+
+.cssmenu .@menu_class ul.cssmenu li.hover,
+.cssmenu .@menu_class ul.cssmenu li:hover {
+  background-color: @menu_hover_bgcolor !important;
+  cursor: default;
+  position: relative;
+  z-index: 999;
+}
+
+.cssmenu .@menu_class ul.cssmenu a:link,
+.cssmenu .@menu_class ul.cssmenu a:visited {
+  color: @menu_text_color !important;
+  text-decoration: none;
+}
+
+.cssmenu .@menu_class ul.cssmenu a:hover {
+  color: @menu_hover_text_color !important;
+  text-decoration: none;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul {
+  filter: alpha(opacity=@ie_opacity);
+  KhtmlOpacity: @non_ie_opacity;
+  list-style: none;
+  margin: 0;
+  -moz-opacity: @non_ie_opacity;
+  opacity: @non_ie_opacity;
+  padding: 0;
+  text-align: left;
+  width: 170px;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul li {
+  background-color: @menu_item_bgcolor !important;
+  filter: none;
+  text-transform: @menu_item_text_transform !important;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul li.hover,
+.cssmenu .@menu_class ul.cssmenu ul li:hover {
+  background-color: @menu_item_hover_bgcolor !important;
+}
+
+.cssmenu .@menu_class ul.cssmenu li a {
+  display: block !important;
+  padding: 7px 14px;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul a:link,
+.cssmenu .@menu_class ul.cssmenu ul a:visited {
+  color: @menu_item_text_color !important;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul a:hover {
+  color: @menu_item_hover_text_color !important;
+  text-decoration: none;
+}
+
+.cssmenu .@menu_class ul.cssmenu *.dir {
+  background-image: none;
+  background-position: 100% 50%;
+  background-repeat: no-repeat;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul {
+  left: 0px;
+  position: absolute;
+  top: 100%;
+  visibility: hidden;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul li {
+  float: none;
+}
+
+.cssmenu .@menu_class ul.cssmenu ul ul {
+  left: 100%;
+  top: 1px;
+}
+
+.cssmenu .@menu_class ul.cssmenu li:hover > ul {
+  visibility: visible;
+}
