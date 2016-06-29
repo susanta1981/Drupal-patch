@@ -126,7 +126,7 @@
     </div>
     <div class="landing-content text-center col-sm-10 landingContent" id="landingcontent3" style="display:none;">
 	<?php print render($forgot_pass_form);?>
-    	<img src="assets/images/lock_icon.png" width="57" class="margin-top-85"/>
+    <!--	<img src="assets/images/lock_icon.png" width="57" class="margin-top-85"/>
         <h1 class="headline margin-top-20">Request New Password</h1>
         <div class="row">
         	<div class="col-md-4"></div>
@@ -155,7 +155,7 @@
             	<div class="col-md-12">
                 	<a href="" class="landingContent" id="landingCTABack000"><p class="simple-link margin-bottom-40">Back to Sign On</p></a>
                 </div>
-            </div>
+            </div>-->
     </div>
     <div class="col-sm-1"></div>
     </div>

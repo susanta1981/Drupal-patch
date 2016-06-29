@@ -77,10 +77,10 @@ function bartik_process_page(&$variables) {
     drupal_add_js(drupal_get_path('theme', 'bartik') . '/js/custom.js');
 	$variables['forgot_pass_form'] = drupal_get_form('user_pass');
   }
-  dsm($variables, 'vars');
+  //dsm($variables, 'vars');
 }
 function bartik_form_alter(&$form, &$form_state, $form_id) {
-  dsm($form_id, 'form_id');
+  //dsm($form_id, 'form_id');
   if($form_id == 'user_login') {
     $site_name = variable_get('site_name', 'Drupal');
 	unset($form['name']['#title']);
@@ -91,19 +91,25 @@ function bartik_form_alter(&$form, &$form_state, $form_id) {
 	$form['name']['#attributes']['placeholder'][] = 'User Id';
 	$form['pass']['#attributes']['class'][] = 'form-control';
 	$form['pass']['#attributes']['placeholder'][] = 'Password';
-	$form['request_password'] = array(
-	  '#type' => 'markup',
-	  '#markup' => '<p class="simple-link margin-bottom-0 text-center loadLandingContent" id="landingCTABack2" style="color:#0077bb;cursor:pointer;">Request New Password</p>',
-	);
-
+	
 	$form['actions']['submit']['#attributes']['class'][] = 'btn btn-primary btn-lg btn-block loadLandingContent';
 	$form['actions']['submit']['#value'] = 'Sign On';
+  }
+  if($form_id == 'user_pass') {
+	$form['name']['#attributes']['placeholder'][] = $form['name']['#title'];
+	$form['name']['#attributes']['class'][] = 'form-control margin-top-20';
+	$form['actions']['submit']['#attributes']['class'][] = 'btn btn-primary btn-lg btn-block loadLandingContent';
+	unset($form['name']['#title']);
   }
 }
 
 function bartik_theme(&$existing, $type, $theme, $path) {
   $hooks['user_login'] = array(
     'template' => 'templates/user_login',
+    'render element' => 'form',
+  );
+  $hooks['user_pass'] = array(
+    'template' => 'templates/user_pass',
     'render element' => 'form',
   );
   
