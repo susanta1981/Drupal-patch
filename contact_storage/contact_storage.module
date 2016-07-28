@@ -40,6 +40,7 @@ function contact_storage_form_contact_form_form_alter(&$form, FormStateInterface
   ];
   $form['#entity_builders'][] = 'contact_storage_contact_form_form_builder';
 }
+
 /**
  * Entity builder for the contact form edit form with third party options.
  *
@@ -112,7 +113,6 @@ function contact_storage_entity_base_field_info(EntityTypeInterface $entity_type
   }
 }
 
-
 /**
  * Implements hook_entity_base_field_info_alter().
  */
@@ -136,7 +136,7 @@ function contact_storage_entity_operation_alter(array &$operations, EntityInterf
     $operations['view'] = array(
       'title' => t('View'),
       'weight' => 0,
-      'url' => $entity->urlInfo('canonical'),
+      'url' => $entity->toUrl('canonical'),
     );
   }
 }
@@ -145,7 +145,7 @@ function contact_storage_entity_operation_alter(array &$operations, EntityInterf
  * Implements hook_entity_type_alter().
  */
 function contact_storage_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  // @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[]
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageInterface interface.
   $entity_types['contact_message']->setStorageClass('\Drupal\Core\Entity\Sql\SqlContentEntityStorage');
