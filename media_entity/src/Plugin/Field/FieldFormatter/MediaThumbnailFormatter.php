@@ -138,7 +138,7 @@ class MediaThumbnailFormatter extends ImageFormatter {
     if ($image_link_setting == 'content') {
       $entity = $items->getEntity();
       if (!$entity->isNew()) {
-        $url = $entity->urlInfo();
+        $url = $entity->toUrl();
       }
     }
     elseif ($image_link_setting == 'media') {
