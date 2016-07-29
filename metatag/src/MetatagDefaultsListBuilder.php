@@ -52,7 +52,7 @@ class MetatagDefaultsListBuilder extends ConfigEntityListBuilder {
       $operations['revert'] = array(
         'title' => t('Revert'),
         'weight' => $operations['edit']['weight'] + 1,
-        'url' => $entity->urlInfo('revert-form'),
+        'url' => $entity->toUrl('revert-form'),
       );
     }
 
