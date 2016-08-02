@@ -136,7 +136,7 @@ class CropType extends ConfigEntityBundleBase implements \IteratorAggregate, Cro
   public static function getCropTypeNames() {
     return array_map(
       function ($bundle_info) { return $bundle_info['label'];},
-      \Drupal::entityManager()->getBundleInfo('crop')
+      \Drupal::entityTypeManager()->getBundleInfo('crop')
     );
   }
 
