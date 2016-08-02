@@ -1,0 +1,16 @@
+type: module
+name: 'Devel Node Access'
+description: 'Developer blocks and page illustrating relevant node_access records.'
+package: Development
+# core: 8.x
+dependencies:
+ - devel
+ - menu_ui
+tags:
+ - developer
+
+# Information added by Drupal.org packaging script on 2016-07-23
+version: '8.x-1.0-alpha1+12-dev'
+core: '8.x'
+project: 'devel'
+datestamp: 1469266744
