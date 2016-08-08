@@ -28,7 +28,7 @@ class AnimateSliderBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-	$storage = \Drupal::entityManager()->getStorage('taxonomy_term');
+	$storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
 	$tids = $storage->getQuery()
       ->condition('vid', 'slider')
       ->execute();
@@ -58,7 +58,7 @@ class AnimateSliderBlock extends BlockBase {
    */
   public function build() {
 
-    $storage = \Drupal::entityManager()->getStorage('node');
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
     $nids = $storage->getQuery()
       ->condition('type', 'slider')
       ->condition('status', 1)
@@ -93,7 +93,7 @@ class AnimateSliderBlock extends BlockBase {
       );
       $title = $node->title->value;
       $summary = $node->body->value;
-      $image_storage = \Drupal::entityManager()->getStorage('image_style');
+      $image_storage = \Drupal::entityTypeManager()->getStorage('image_style');
 	  $img = $image_storage->load('medium')->buildUrl($node->field_slide_image->entity->getFileUri());
       $node_uri = $node->toUrl('canonical');
       $node_link = \Drupal::l($this->t('Read more'), $node_uri);
