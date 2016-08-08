@@ -1,0 +1,78 @@
+.anim-slider {
+  background: #26282a;
+  color: #ffffff;
+  text-align: left;
+  top: 0;
+  width: 100%;
+}
+.anim-dots span {
+  border-radius: 100%;
+  background: none repeat scroll 0 0 #99a3ad;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  margin: 3px;
+  position: relative;
+  width: 14px;
+}
+
+.anim-dots span.anim-dots-this:after {
+  background: none repeat scroll 0 0 #2d3d4f;
+  border-radius: 100%;
+  content: "";
+  height: 14px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 14px;
+}
+.anim-slide h1 {
+  color: #888888;
+  font-weight: 300;
+  font-size: 3em;
+}
+.anim-slide h2 {
+  color: #c0c0c0;
+  font-size: 35px;
+}
+.anim-slide h3 {
+  color: #c0c0c0;
+  font-size: 30px;
+}
+.anim-slide h4 {
+  color: #c0c0c0;
+  font-size: 25px;
+}
+
+.animate-field-title {
+  left: 10%;
+  top: 4%;
+  width: 50%;
+}
+.animate-field-body {
+  left: 10%;
+  top: 30%;
+  width: 50%;
+}
+.animate-field-link {
+  left: 10%;
+  bottom: 25%;
+  width: 40%;
+}
+.animate-field-link a {
+  color: #fff;
+  background-color: #d03232;
+  padding: 10px 25px 10px 25px;
+  border-radius: 5px;
+  text-decoration: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-bottom: 3px solid #732121;
+  -webkit-transition: .5s ease;
+  -moz-transition: .5s ease;
+  transition: .5s ease;
+}
+img#slideshow-image {
+  right: 20%;
+  top: 25%;
+}

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Slider
+vid: slider
+description: 'New slider type'
+hierarchy: 0
+weight: 0

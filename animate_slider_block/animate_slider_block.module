@@ -1,0 +1,37 @@
+<?php
+/**
+ * @file
+ * Provides a theme template for animate slider.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function animate_slider_block_theme() {
+  return array(
+    'animate_slider_block' => array(
+      'variables' => array(
+        'rows' => NULL,
+        'id' => NULL,
+      ),
+      'template' => 'animate-slider-block',
+    ),
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function animate_slider_block_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.animate_slider_block':
+      $output = '';
+      $output .= '<h3>' . t('About Animate Slider block') . '</h3>';
+      $output .= '<p>' . t('The Animate slider block will give you the power to create multiple instances of slider using the core drupal block separated by category/pages.  If you want to create multiple slider instances, First you have to create different category <b><a href=":url">here</a></b> like Home, Services ...', array(':url' => \Drupal::url('entity.taxonomy_term.add_form', array('taxonomy_vocabulary' => 'slider')))) . '</p>';
+      $output .= '<p>' . t('Then you can <b><a href=":create">create slide items</a></b> and assign it to any category.', array(':create' => \Drupal::url('node.add', array('node_type' => 'slider')))) . '</p>';
+      $output .= '<p>' . t('Now the slider block will be visible by configuring in the block layout') . '</p>';
+      return $output;
+  }
+}
