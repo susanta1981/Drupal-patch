@@ -46,7 +46,7 @@ class DeleteRedirect extends ConfigFormBase {
     $values = $form_state->getValues();
 
     if ($values['op']->render() == 'No') {
-      url_redirect_redirect(\Drupal::url('url_redirect.list_redirects'));
+      url_redirect_redirect(Url::fromRoute('url_redirect.list_redirects')->toString());
     }
     if ($values['op']->render() == 'Delete') {
      $delete_path = \Drupal::request()->query->get('path');
@@ -58,7 +58,7 @@ class DeleteRedirect extends ConfigFormBase {
         ->execute();
 
       drupal_set_message(t("The path '@path' is deleted.", array('@path' => $delete_path)));
-      url_redirect_redirect(\Drupal::url('url_redirect.list_redirects'));
+      url_redirect_redirect(Url::fromRoute('url_redirect.list_redirects')->toString());
     }
   }
 }

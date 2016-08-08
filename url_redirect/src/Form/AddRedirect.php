@@ -126,7 +126,7 @@ class AddRedirect extends ConfigFormBase {
     $values = $form_state->getValues();
 
     if ($values['op']->render() == 'Reset') {
-      url_redirect_redirect(\Drupal::url('url_redirect.add_redirect'));
+      url_redirect_redirect(Url::fromRoute('url_redirect.add_redirect')->toString());
     }
     if ($values['op']->render() == 'Submit') {
 
@@ -199,6 +199,6 @@ class AddRedirect extends ConfigFormBase {
       ->execute();
 
     // Redirect to listing page.
-    url_redirect_redirect(\Drupal::url('url_redirect.list_redirects'));
+    url_redirect_redirect(Url::fromRoute('url_redirect.list_redirects')->toString());
   }
 }

@@ -169,7 +169,7 @@ class ListRedirect extends ConfigFormBase {
 
     // Goto current path if reset.
     if ($values['op'] == 'Reset') {
-      url_redirect_redirect(\Drupal::url('url_redirect.list_redirects'));
+      url_redirect_redirect(Url::fromRoute('url_redirect.list_redirects')->toString());
     }
     // Pass values to url.
     if ($values['op'] == 'Filter') {
@@ -177,7 +177,7 @@ class ListRedirect extends ConfigFormBase {
       $filter_redirect_path = $values['redirect_path'];
       $params['path'] = Html::escape($filter_path);
       $params['redirect_path'] = Html::escape($filter_redirect_path);
-      url_redirect_redirect(\Drupal::url('url_redirect.list_redirects', $params, ['absolute' => TRUE]));
+      url_redirect_redirect(Url::fromRoute('url_redirect.list_redirects', $params, array('absolute' => TRUE))->toString());
     }
   }
 }
