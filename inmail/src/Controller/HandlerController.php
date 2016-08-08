@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\inmail\Entity\HandlerConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
 
 /**
  * Route controller for message handlers.
@@ -33,7 +34,7 @@ class HandlerController extends ControllerBase {
    */
   public function enable(HandlerConfig $inmail_handler) {
     $inmail_handler->enable()->save();
-    return new RedirectResponse(\Drupal::url('entity.inmail_handler.collection', [], ['absolute' => TRUE]));
+	return new RedirectResponse(Url::fromRoute('entity.inmail_handler.collection', [], array('absolute' => TRUE))->toString());
   }
 
   /**
@@ -41,7 +42,7 @@ class HandlerController extends ControllerBase {
    */
   public function disable(HandlerConfig $inmail_handler) {
     $inmail_handler->disable()->save();
-    return new RedirectResponse(\Drupal::url('entity.inmail_handler.collection', [], ['absolute' => TRUE]));
+	return new RedirectResponse(Url::fromRoute('entity.inmail_handler.collection', [], array('absolute' => TRUE))->toString());
   }
 
 }

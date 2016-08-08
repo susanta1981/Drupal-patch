@@ -10,6 +10,7 @@ use Drupal\inmail\Entity\DelivererConfig;
 use Drupal\inmail\Plugin\inmail\Deliverer\FetcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
 
 /**
  * Route controller for mail deliverers.
@@ -54,6 +55,7 @@ class DelivererController extends ControllerBase implements ContainerInjectionIn
   public function enable(DelivererConfig $inmail_deliverer) {
     $inmail_deliverer->enable()->save();
     return new RedirectResponse(\Drupal::url('entity.inmail_deliverer.collection', [], ['absolute' => TRUE]));
+    return new RedirectResponse(Url::fromRoute('entity.inmail_deliverer.collection')->toString());
   }
 
   /**
@@ -61,7 +63,7 @@ class DelivererController extends ControllerBase implements ContainerInjectionIn
    */
   public function disable(DelivererConfig $inmail_deliverer) {
     $inmail_deliverer->disable()->save();
-    return new RedirectResponse(\Drupal::url('entity.inmail_deliverer.collection', [], ['absolute' => TRUE]));
+	return new RedirectResponse(Url::fromRoute('entity.inmail_deliverer.collection', [], array('absolute' => TRUE))->toString());
   }
 
 }

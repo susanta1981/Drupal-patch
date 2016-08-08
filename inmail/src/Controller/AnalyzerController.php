@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\inmail\Entity\AnalyzerConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
 
 /**
  * Route controller for message analyzers.
@@ -33,7 +34,7 @@ class AnalyzerController extends ControllerBase {
    */
   public function enable(AnalyzerConfig $inmail_analyzer) {
     $inmail_analyzer->enable()->save();
-    return new RedirectResponse(\Drupal::url('entity.inmail_analyzer.collection', [], ['absolute' => TRUE]));
+    return new RedirectResponse(Url::fromRoute('entity.inmail_analyzer.collection', [], array('absolute' => TRUE))->toString());
   }
 
   /**
@@ -41,7 +42,7 @@ class AnalyzerController extends ControllerBase {
    */
   public function disable(AnalyzerConfig $inmail_analyzer) {
     $inmail_analyzer->disable()->save();
-    return new RedirectResponse(\Drupal::url('entity.inmail_analyzer.collection', [], ['absolute' => TRUE]));
+    return new RedirectResponse(Url::fromRoute('entity.inmail_analyzer.collection', [], array('absolute' => TRUE))->toString());
   }
 
 }
