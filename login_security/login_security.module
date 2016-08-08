@@ -9,6 +9,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\UserInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_cron().
@@ -424,7 +425,7 @@ function _login_security_get_variables_by_name($name) {
     '@uid' => $account->uid->value,
     '@site' => \Drupal::config('system.site')->get('name'),
     '@uri' => $base_url,
-    '@edit_uri' => \Drupal::url('entity.user.edit_form', array('user' => $account->uid->value), array('absolute' => TRUE)),
+    '@edit_uri' => Url::fromRoute('entity.user.edit_form', array('user' => $account->uid->value), array('absolute' => TRUE))->toString(),
     '@hard_block_attempts' => $config->get('host_wrong_count_hard'),
     '@soft_block_attempts' => $config->get('host_wrong_count'),
     '@user_block_attempts' => $config->get('user_wrong_count'),
