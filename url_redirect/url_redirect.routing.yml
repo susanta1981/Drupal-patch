@@ -1,0 +1,33 @@
+url_redirect.add_redirect:
+  path: '/admin/config/url_redirect'
+  defaults:
+    _form: '\Drupal\url_redirect\Form\AddRedirect'
+    _title: 'URL Redirect'
+  requirements:
+    _permission: 'access url redirect settings page'
+
+url_redirect.list_redirects:
+  path: '/admin/config/url_redirect/list'
+  defaults:
+    _form: '\Drupal\url_redirect\Form\ListRedirect'
+    _title: 'List URL Redirect'
+  requirements:
+    _permission: 'access url redirect settings page'
+
+url_redirect.edit_redirect:
+  path: '/admin/config/url_redirect/edit'
+  defaults:
+    _form: '\Drupal\url_redirect\Form\EditRedirect'
+    _title: 'Url Redirect Edit'
+  requirements:
+    _permission: 'access url redirect edit page'
+
+url_redirect.delete_redirect:
+  path: '/admin/config/url_redirect/delete'
+  defaults:
+    _form: '\Drupal\url_redirect\Form\DeleteRedirect'
+    _title: 'Url Redirect Delete'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'access url redirect delete page'
