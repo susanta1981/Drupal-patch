@@ -1,0 +1,48 @@
+Return-Path: <arild@masked1.se>
+Delivered-To: inmail_test@example.com
+Received: from mx-w.one.com (mx-w.one.com [195.47.247.148])
+	by mail160.local.one.com (Postfix) with ESMTP id 5D2E93006DC696
+	for <inmail_test@example.com>; Tue, 21 Oct 2014 09:21:02 +0000 (UTC)
+X-Virus-Scanned: by one.com
+X-Greylist: whitelisted by SQLgrey-1.8.0-rc2
+Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com [209.85.212.177])
+	by mx-w.one.com (Postfix) with ESMTP id 3ADD520164D89
+	for <inmail_test@example.com>; Tue, 21 Oct 2014 09:21:02 +0000 (UTC)
+Received: by mail-wi0-f177.google.com with SMTP id fb4so1237718wid.4
+        for <inmail_test@example.com>; Tue, 21 Oct 2014 02:21:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20130820;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-type;
+        bh=8JGUbVVunghCgsQ4IKqCgogq11h9ujkZ+AKd7xz20k8=;
+        b=Ad5AeTrofxBmN+t2BOtRCzWQ0hpZRBJWx/WWYEmJRUaD8781mPxuBUSfm4CXIr/I46
+         R4onzYSKogv87bsZn2DpBEeqVb5JhBoJFQ/ZTPpyBsxW3IGqKVww+u48ivYOr+DGppGb
+         KNy4TqyK2GLsIyO4pbkvhCNpTeZUbk74MQOoaCj5lTc3NTAZfAcrETyN/AHJt2+jACr+
+         MTNmg4vG6rGg0eD/1r3FW8Jr3cKuvACbfRbVZfRPQkSaspiDl+gVeAcbU2Fm52N24qTD
+         jbZWfbMKfs5U9NleJtPdk1xoboTiUKtc411WGJiBVa7DOy2zhSMsrsf3aLCbplvfVU3J
+         unow==
+X-Gm-Message-State: ALoCoQniI3KPZpfk2rj+ODnxPNJ++BD6WvlqeVYCkg3OvqWeInukT0M19UWlePniaEH93Ly5+ElO
+MIME-Version: 1.0
+X-Received: by 10.194.79.201 with SMTP id l9mr40846075wjx.59.1413883261873;
+ Tue, 21 Oct 2014 02:21:01 -0700 (PDT)
+Received: by 10.194.188.75 with HTTP; Tue, 21 Oct 2014 02:21:01 -0700 (PDT)
+X-Originating-IP: [83.150.36.145]
+Date: Tue, 21 Oct 2014 11:21:01 +0200
+Message-ID: <CAFZOsfMjtXehXPGxbiLjydzCY0gCkdngokeQACWQOw+9W5drqQ@mail.gmail.com>
+Subject: BMH testing sample
+From: Arild Matsson <arild@masked1.se>
+To: Arild Matsson <inmail_test@example.com>
+Content-Type: multipart/alternative; boundary=047d7bf0d0f694271f0505eb5984
+
+--047d7bf0d0f694271f0505eb5984
+Content-Type: text/plain; charset=UTF-8
+
+Hey, it would be really bad for a mail handler to classify this as a bounce
+just because I have no mailbox outside my house.
+
+--047d7bf0d0f694271f0505eb5984
+Content-Type: text/html; charset=UTF-8
+
+<div dir="ltr">Hey, it would be really bad for a mail handler to classify this as a bounce just because I have no mailbox outside my house.</div>
+
+--047d7bf0d0f694271f0505eb5984--

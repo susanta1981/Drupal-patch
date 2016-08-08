@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * Implementations of install hooks for the Inmail module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function inmail_install() {
+  // Register the special mail plugin used with ModeratorForwardHandler.
+  $config_data['interface']['inmail_handler_moderator_forward'] = 'inmail_direct';
+  \Drupal::configFactory()->getEditable('system.mail')->merge($config_data)->save();
+}

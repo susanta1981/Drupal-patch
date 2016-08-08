@@ -1,0 +1,29 @@
+<?php
+/**
+ * @file
+ * Procedural code for the Inmail PHPMailer-BMH submodule.
+ */
+
+use Drupal\inmail\MIME\Parser;
+
+if (!function_exists('imap_rfc822_parse_adrlist')) {
+  /**
+   * Parses the address string as defined in RFC 2822 and for each address.
+   *
+   * This function is used in bmhDSNRules(). To avoid having to depend on the
+   * IMAP extension just for this, this defines an alternative address parser.
+   *
+   * @ingroup analyzer
+   *
+   * @see http://php.net/manual/en/function.imap-rfc822-parse-adrlist.php
+   */
+  function imap_rfc822_parse_adrlist($address, $default_host) {
+    // For each address.
+    return array_map(function(array $mailbox) {
+      // Split the address and put the parts in an object, in order to match the
+      // return value structure of the original function.
+      list($mailbox, $host) = explode('@', $mailbox['address']);
+      return (object) ['mailbox' => $mailbox, 'host' => $host];
+    }, Parser::parseAddress($address));
+  }
+}

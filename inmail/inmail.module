@@ -1,0 +1,325 @@
+<?php
+/**
+ * @file
+ * Main procedural code file for the Inmail module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\inmail\Entity\AnalyzerConfig;
+use Drupal\inmail\MIME\Parser;
+use Drupal\inmail\Plugin\inmail\Deliverer\FetcherInterface;
+
+/**
+ * @mainpage
+ * This documentation is generated from comments embedded in the source code of
+ * the Imail project. It is targeted for developers who want to understand how
+ * the module works in order to fix a bug, add a feature or integrate with the
+ * module through the API.
+ *
+ * You can read more under the following chapters:
+ *   - @link processing The general message processing flow @endlink
+ *   - @link mime Message parsing @endlink
+ *   - @link deliverer Fetching email over IMAP @endlink
+ *   - @link analyzer Analysis of new messages @endlink
+ *   - @link handler Handling analyzed messages @endlink
+ *   - @link mailmute Integration with the Mailmute module @enlink
+ *
+ * In short, these are the interesting interfaces when integrating with Inmail:
+ *   - To process email, get the service inmail.processor, which implements
+ *     \Drupal\inmail\MessageProcessorInterface including ::process().
+ *   - To extend Inmail with analyzers or handlers, you need to implement
+ *     \Drupal\inmail\MessageAnalyzer\MessageAnalyzerInterface as a service, or
+ *     \Drupal\inmail\Plugin\inmail\Handler\HandlerInterface as a plugin.
+ *
+ * @section bounce Bounce messages
+ * When a mail server is unable to deliver a message, it typically creates and
+ * sends a "bounce message" back to the sender, informing about the failure.
+ * Bounce messages are standardized in
+ * @link http://tools.ietf.org/html/rfc3464 RFC 3464 "An Extensible Message Format for Delivery Status Notifications" @endlink
+ * as Delivery Status Notifications (DSN). Some servers do however send bounce
+ * messages that do not adhere to the standards.
+ *
+ * Bounces are the central type of message that this project is concerned with.
+ * Some bounce-oriented analyzers are provided by default. During the first
+ * phases of this project, bounce message handling is the definite focus of
+ * attention. Further releases are however planned to include handling of manual
+ * replies on messages previously sent from the website, and even new messages
+ * sent directly to the website.
+ */
+
+/**
+ * @defgroup processing Message processing
+ * @{
+ * Email messages to the website is processed by the inmail.processor service,
+ * which serves to perform various actions depending on the content of the
+ * message.
+ *
+ * First the plain-text message is parsed into a
+ * \Drupal\inmail\MIME\EntityInterface object, which is then passed through a
+ * series of analyzers, along with a \Drupal\inmail\ProcessorResult object. Each
+ * analyzer evaluates some aspect of the message and possibly adds collected
+ * information to the result. Finally the message and the result are sent
+ * through a series of handlers, in order for them to perform useful actions
+ * based on the analysis results.
+ * @}
+ */
+
+/**
+ * @defgroup mime Message parsing
+ * @{
+ * Messages are parsed largely, but not strictly, according to the first two
+ * parts of the MIME standard:
+ * @link https://tools.ietf.org/html/rfc2045 RFC 2045 @endlink and
+ * @link https://tools.ietf.org/html/rfc2046 RFC 2046 @endlink. A special focus
+ * is directed to DSN messages, which are specified in
+ * @link http://tools.ietf.org/html/rfc3464 RFC 3464 @endlink and
+ * @link http://tools.ietf.org/html/rfc3462 RFC 3462 @endlink.
+ *
+ * A raw message string can be parsed with
+ * \Drupal\inmail\MIME\Parser::parseMessage() into an object implementing
+ * \Drupal\inmail\MIME\MessageInterface. The parser attempts to downcast the
+ * object based on its content type and structure, into a
+ * \Drupal\inmail\MIME\MultipartEntity or even more specifically to a
+ * \Drupal\inmail\MIME\DSNEntity.
+ *
+ * The Parser class is registered as a service under the name
+ * "inmail.mime_parser".
+ *
+ * Header fields are grouped and modeled as a \Drupal\inmail\MIME\Header. (Note
+ * that the term "header" is often more or less informally used for a single
+ * header field; the naming here tries to adhere to the standardized
+ * terminology.) The syntax of an Entity header is used in other contexts as
+ * well, notably for declaring status fields in a DSN message, in which case the
+ * Header class is preferrably re-used although not technically representing an
+ * actual header.
+ * @}
+ */
+
+/**
+ * @defgroup deliverer Fetching email over IMAP
+ * @{
+ * To process messages from an IMAP account, visit the "Mail deliverers" list
+ * (admin/config/inmail/deliverers) and configure a new deliverer, entering
+ * server details and credentials in the form. Messages are delivered and
+ * processed during Cron runs.
+ * @}
+ */
+
+/**
+ * @defgroup analyzer Analyzers
+ * @{
+ * Analyzers evaluate messages to deduce specific information that can be used
+ * by handlers.
+ *
+ * The analyzer services are called by priority in descending order. The order
+ * is important because the result object passed between them is only writable
+ * once per property. For example, if two analyzers report different
+ * @link bounce DSN status codes @endlink, only the one with the higher priority
+ * may set the status code property on the result.
+ * An analyzer that produces frequent but unreliable results should be given a
+ * low priority, to let it be used only as a "last resort". On the other side of
+ * the scale is \Drupal\inmail\MessageAnalyzer\DSNStatusAnalyzer, which only
+ * reports results that are deducible according to standard RFCs, and therefore
+ * highly reliable.
+ *
+ * Adding your own analyzer is a matter of implementing
+ * \Drupal\inmail\MessageAnalyzer\MessageAnalyzerInterface and adding a service
+ * record for the class.
+ * @}
+ */
+
+/**
+ * @defgroup handler Handlers
+ * @{
+ * Handlers provide callbacks that are executed after each message has been
+ * analyzed.
+ *
+ * Handlers are added by creating a subclass of
+ * \Drupal\inmail\Plugin\inmail\Handler\HandlerBase in the matching plugin
+ * namespace. To make it configurable, make sure to override the
+ * \Drupal\Component\Plugin\ConfigurablePluginInterface methods and define the
+ * schema for it in yourmodule.schema.yml. See inmail_mailmute for an example.
+ * @}
+ */
+
+/**
+ * @defgroup mailmute Mailmute integration
+ * @{
+ * The Mailmute message handler
+ *
+ * The optional submodule inmail_mailmute provides integration with the Mailmute
+ * module (http://drupal.org/project/mailmute). The purpose is to avoid keeping
+ * sending messages to email addresses if prior delivery failed. Typical reasons
+ * for delivery failure include abandoned email accounts, full inboxes and
+ * misspelled or misentered addresses.
+ *
+ * For hard bounces (e.g. due to a misspelled and non-existent address), the
+ * state of the recipient address is set to "Invalid address". A soft bounce
+ * (e.g. due to a full inbox) triggers a transition to the "Counting soft
+ * bounces" state, and after a configurable number of subsequent soft bounces,
+ * the state is set to "Temporarily unreachable".
+ *
+ * Whether a bounce is considered soft or hard depends on the status code that
+ * an Analyzer assigned to the message. A 4.X.X code indicates a soft bounce,
+ * and a 5.X.X code indicates a hard bounce.
+ *
+ * If the message is not identified as a bounce, or if it is a bounce but the
+ * state of the intended recipient is currently "Persistent send", nothing
+ * happens. If it is a bounce but the address can not be extracted
+ * automatically, it may be forwarded to an administrator for manual handling.
+ * @}
+ */
+
+/**
+ * Implements hook_help().
+ */
+function inmail_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Display handler information on handler configuration forms.
+    case 'entity.inmail_handler.edit_form':
+      $handler_config = $route_match->getParameter('inmail_handler');
+      /** @var \Drupal\inmail\Plugin\inmail\Handler\HandlerInterface $handler */
+      $handler = \Drupal::service('plugin.manager.inmail.handler')->createInstance($handler_config->getPluginId());
+      $help = $handler->help();
+      return drupal_render($help);
+
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function inmail_mail_alter(&$message) {
+  // Set to custom Return-Path if configured.
+  if ($return_path = \Drupal::config('inmail.settings')->get('return_path')) {
+    $message['headers']['Return-Path'] = $return_path;
+  }
+
+  // Manipulate the Return-Path.
+  if (AnalyzerConfig::load('verp')->status()) {
+    inmail_mail_alter_verp($message);
+  }
+}
+
+/**
+ * Modifies the Return-Path value to include the recipient's address.
+ *
+ * The technique is called Variable Envelope Return Path (VERP) and enables easy
+ * identification of the intended recipient for incoming bounce messages. That
+ * identification happens in VerpAnalyzer.
+ *
+ * @see \Drupal\inmail\MessageAnalyzer\VerpAnalyzer
+ * @see inmail_generate_verp()
+ *
+ * @todo Make VERP pluggable, https://www.drupal.org/node/2463737
+ */
+function inmail_mail_alter_verp(&$message) {
+  // Identify current Return-Path value.
+  $return_path = $message['headers']['Return-Path'];
+
+  // Parse recipient address.
+  $to = Parser::parseAddress($message['to']);
+
+  // Give up if recipient is multiple addresses, because including multiple
+  // addresses in the Return-Path is troublesome.
+  if (count($to) != 1) {
+    \Drupal::logger('inmail')->notice('Cannot use VERP for multiple recipients, message ID: @id', ['@id' => $message['id']]);
+    $message['send'] = FALSE;
+    return;
+  }
+
+  // Copy headers to allow case-insensitive lookup.
+  $headers = array_change_key_case($message['headers'], CASE_LOWER);
+
+  // Give up if there are Cc/Bcc recipients, because if they bounce we will
+  // accidentally identify the To recipient as undeliverable.
+  // @todo Handle VERP for bounces from a Cc recipient, https://www.drupal.org/node/2475987
+  $has_cc = isset($headers['cc']) && Parser::parseAddress($headers['cc']);
+  $has_bcc = isset($headers['bcc']) && Parser::parseAddress($headers['bcc']);
+  if ($has_cc || $has_bcc) {
+    \Drupal::logger('inmail')->notice('Cannot use VERP for message with Cc/Bcc recipients, message ID: @id', ['@id' => $message['id']]);
+    $message['send'] = FALSE;
+    return;
+  }
+
+  // Include recipient address in Return-Path value.
+  if ($return_path) {
+    $message['headers']['Return-Path'] = inmail_generate_verp($return_path, $message['to']);
+  }
+}
+
+/**
+ * Generates a VERP Return-Path address.
+ *
+ * @param string $return_path
+ *   The original Return-Path address.
+ * @param string $recipient
+ *   The address of the recipient.
+ *
+ * @return string
+ *   The modified Return-Path address.
+ *
+ * @see \Drupal\inmail\MessageAnalyzer\VERPAnalyzer
+ */
+function inmail_generate_verp($return_path, $recipient) {
+  $to = str_replace('@', '=', $recipient);
+  return str_replace('@', "+$to@", $return_path);
+}
+
+/**
+ * Implements hook_mail().
+ */
+function inmail_mail($key, &$message, $params) {
+  switch ($key) {
+    // Forwards unclassified bounces through ModeratorForwardHandler.
+    case 'handler_moderator_forward':
+      /** @var \Drupal\inmail\MIME\MessageInterface $original */
+      $original = $params['original'];
+
+      // Set subject.
+      $message['subject'] = $original->getSubject();
+
+      // Set body.
+      $message['body'][] = $original->getBody();
+
+      // Set headers, with custom X header prepended.
+      // Alter hooks expect headers to be in name => value format. Such a
+      // structure cannot handle duplicate header names, as is common with e.g.
+      // the Received header and therefore a requirement in the context of
+      // forwarding. Thus the headers are assigned to $message['raw_headers']
+      // here, and the same is expected by DirectMail.
+      $header = clone $original->getHeader();
+      $header->removeField('To');
+      $header->addField('X-Inmail-Forwarded', 'handler_moderator_forward');
+      $message['raw_headers'] = $header->toString();
+      break;
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function inmail_cron() {
+  // @todo Call only active deliverers, https://www.drupal.org/node/2379909
+  $deliverer_ids = \Drupal::entityQuery('inmail_deliverer')->condition('status', TRUE)->execute();
+  /** @var \Drupal\inmail\Entity\DelivererConfig[] $deliverers */
+  $deliverers = \Drupal::entityManager()->getStorage('inmail_deliverer')->loadMultiple($deliverer_ids);
+  /** @var \Drupal\Component\Plugin\PluginManagerInterface $deliverer_manager */
+  $deliverer_manager = \Drupal::service('plugin.manager.inmail.deliverer');
+  /** @var \Drupal\inmail\MessageProcessorInterface $processor */
+  $processor = \Drupal::service('inmail.processor');
+
+  // Fetch and process new mail.
+  foreach ($deliverers as $deliverer) {
+    $plugin = $deliverer_manager->createInstance($deliverer->getPluginId(), $deliverer->getConfiguration());
+
+    // Only run active deliverers.
+    if ($plugin instanceof FetcherInterface) {
+      $raws = $plugin->fetch();
+      $processor->processMultiple($raws, $deliverer);
+    }
+  }
+
+  // Update timestamp of last sync.
+  \Drupal::state()->set('inmail.deliverers.last_synced', REQUEST_TIME);
+}

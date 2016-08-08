@@ -1,0 +1,18 @@
+name: Inmail Collect
+type: module
+description: Store all incoming messages to allow for custom post-processing.
+package: Mail
+# version: 8.x-1.x
+# core: 8.x
+
+# @todo Remove node dependency after https://www.drupal.org/node/2308745
+dependencies:
+  - inmail
+  - collect
+  - node
+
+# Information added by Drupal.org packaging script on 2016-08-05
+version: '8.x-1.x-dev'
+core: '8.x'
+project: 'inmail'
+datestamp: 1470406442

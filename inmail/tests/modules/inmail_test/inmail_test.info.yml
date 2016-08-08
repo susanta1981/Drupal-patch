@@ -1,0 +1,15 @@
+name: Inmail test
+type: module
+description: Resources for Inmail tests
+# core: 8.x
+hidden: true
+package: Mail
+
+dependencies:
+  - inmail
+
+# Information added by Drupal.org packaging script on 2016-08-05
+version: '8.x-1.x-dev'
+core: '8.x'
+project: 'inmail'
+datestamp: 1470406442
