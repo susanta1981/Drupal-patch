@@ -50,11 +50,11 @@ class CmsshipController extends ControllerBase {
                 'User ' . $user->getUsername() . ' logged in via cmsship with IP of ' . \Drupal::request()->getClientIp() . '.'
             );
 
-            drupal_set_message(t('Successfully logged in via cmsship.'));
+            drupal_set_message($this->t('Successfully logged in via cmsship.'));
 
             return new RedirectResponse('/admin');
         } else {
-            drupal_set_message(t('Could not log you in via cmsship, check watchdog.'), 'error');
+            drupal_set_message($this->t('Could not log you in via cmsship, check watchdog.'), 'error');
 
             return new RedirectResponse('/');
         }

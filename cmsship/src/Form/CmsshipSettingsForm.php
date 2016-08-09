@@ -32,7 +32,7 @@ class CmsshipSettingsForm extends ConfigFormBase {
             '#type' => 'textfield',
             '#title' => $this->t('Account to login too'),
             '#default_value' => $config->get('cmsship_account'),
-            '#description' => t('This is the user id of the account you wish to login to. Go to the user page in the admin area and it will be in the URL after /user/.'),
+            '#description' => $this->t('This is the user id of the account you wish to login to. Go to the user page in the admin area and it will be in the URL after /user/.'),
             '#required' => TRUE
         );
 
@@ -40,7 +40,7 @@ class CmsshipSettingsForm extends ConfigFormBase {
             '#type' => 'textfield',
             '#title' => $this->t('Site Key'),
             '#default_value' => $config->get('cmsship_key'),
-            '#description' => t('This is the Site Key for that domain.'),
+            '#description' => $this->t('This is the Site Key for that domain.'),
             '#required' => TRUE
         );
 
@@ -61,7 +61,7 @@ class CmsshipSettingsForm extends ConfigFormBase {
                 )
             ));
         } catch(\Exception $e) {
-            $form_state->setErrorByName('site_key', t('Site Key is not valid.'));
+            $form_state->setErrorByName('site_key', $this->t('Site Key is not valid.'));
 
             parent::validateForm($form, $form_state);
             
@@ -69,7 +69,7 @@ class CmsshipSettingsForm extends ConfigFormBase {
         }
 
         if ($request->getStatusCode() != '200') {
-            $form_state->setErrorByName('site_key', t('Site Key is not valid.'));
+            $form_state->setErrorByName('site_key', $this->t('Site Key is not valid.'));
         }
 
         parent::validateForm($form, $form_state);
