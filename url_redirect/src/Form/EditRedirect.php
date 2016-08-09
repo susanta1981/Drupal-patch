@@ -4,6 +4,7 @@ namespace Drupal\url_redirect\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\user\Entity\User;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ class EditRedirect extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
 
     $url = Url::fromRoute('url_redirect.list_redirects');
-    $internal_link = \Drupal::l(t('Url Redirect List'), $url);
+    $internal_link = Link::fromTextAndUrl($this->t('Url Redirect List'), $url)->toString();
     $form['goto_list'] = array(
       '#markup' => $internal_link,
     );
@@ -50,7 +51,7 @@ class EditRedirect extends ConfigFormBase {
         '#attributes' => array('placeholder' => 'Enter Redirect Path'),
         '#required' => TRUE,
         '#default_value' => $path_data['redirect_path'],
-        '#description' => t('This can be an internal Drupal path such as node/add, node/* .'),
+        '#description' => $this->t('This can be an internal Drupal path such as node/add, node/* .'),
       );
       $status = array(0 => 'Disabled', 1 => 'Enabled');
       $user_roles = user_role_names();
@@ -60,16 +61,16 @@ class EditRedirect extends ConfigFormBase {
         $form['checked_for'] = array(
           '#type' => 'radios',
           '#options' => array(
-            'Role' => t('Role')
+            'Role' => $this->t('Role')
           ),
-          '#title' => t('Select Redirect path for'),
+          '#title' => $this->t('Select Redirect path for'),
           '#required' => TRUE,
           '#default_value' => 'Role',
         );
         $form['roles'] = array(
           '#type' => 'select',
           '#options' => $user_roles,
-          '#title' => t('Select Roles.'),
+          '#title' => $this->t('Select Roles.'),
           '#multiple' => TRUE,
           '#default_value' => $roles,
         );
@@ -79,15 +80,15 @@ class EditRedirect extends ConfigFormBase {
         $form['checked_for'] = array(
           '#type' => 'radios',
           '#options' => array(
-            'User' => t('User')
+            'User' => $this->t('User')
           ),
-          '#title' => t('Select Redirect path for'),
+          '#title' => $this->t('Select Redirect path for'),
           '#required' => TRUE,
           '#default_value' => 'User',
         );
         $form['user'] = array(
           '#type' => 'select',
-          '#title' => t('Select Users.'),
+          '#title' => $this->t('Select Users.'),
           '#options' => $users,
           '#multiple' => TRUE,
           '#default_value' => $default_users,
@@ -96,33 +97,33 @@ class EditRedirect extends ConfigFormBase {
       $form['message'] = array(
         '#type' => 'radios',
         '#options' => array(
-          'Yes' => t('Yes'),
-          'No' => t('No')
+          'Yes' => $this->t('Yes'),
+          'No' => $this->t('No')
         ),
-        '#title' => t('Display Message for Redirect'),
+        '#title' => $this->t('Display Message for Redirect'),
         '#required' => TRUE,
-        '#description' => t('Show a message for redirect path.'),
+        '#description' => $this->t('Show a message for redirect path.'),
         '#default_value' => $path_data['message'],
       );
       $form['status'] = array(
         '#type' => 'radios',
         '#options' => $status,
-        '#title' => t('Status'),
+        '#title' => $this->t('Status'),
         '#required' => TRUE,
         '#default_value' => $path_data['status'],
       );
       $form['submit'] = array(
         '#type' => 'submit',
-        '#value' => t('Save'),
+        '#value' => $this->t('Save'),
       );
       $form['delete'] = array(
         '#type' => 'submit',
-        '#value' => t('Delete'),
+        '#value' => $this->t('Delete'),
       );
       return $form;
     }
     else {
-      drupal_set_message(t('Path Specified is not correct to update'), 'error');
+      drupal_set_message($this->t('Path Specified is not correct to update'), 'error');
     }
   }
 
@@ -189,7 +190,7 @@ class EditRedirect extends ConfigFormBase {
         ))
         ->condition('path', $path)
         ->execute();
-    drupal_set_message(t("The path '@path' is Updated.", array('@path' => $path)));
+    drupal_set_message($this->t("The path '@path' is Updated.", array('@path' => $path)));
     url_redirect_redirect(Url::fromRoute('url_redirect.list_redirects')->toString());
   }
 }

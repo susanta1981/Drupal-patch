@@ -4,6 +4,7 @@ namespace Drupal\url_redirect\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\user\Entity\User;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,18 +27,18 @@ class ListRedirect extends ConfigFormBase {
     $form = array();
 
     $url = Url::fromRoute('url_redirect.add_redirect');
-    $internal_link = \Drupal::l(t('Add Url Redirect'), $url);
+    $internal_link = Link::fromTextAndUrl($this->t('Add Url Redirect'), $url)->toString();
     $form['goto_list'] = array(
       '#markup' => $internal_link,
     );
 
     $form['path'] = array(
-      '#title' => t('Path'),
+      '#title' => $this->t('Path'),
       '#type' => 'textfield',
       '#default_value' => isset($_GET['path']) ? $_GET['path'] : '',
     );
     $form['redirect_path'] = array(
-      '#title' => t('Redirect Path'),
+      '#title' => $this->t('Redirect Path'),
       '#type' => 'textfield',
       '#default_value' => isset($_GET['redirect_path']) ? $_GET['redirect_path'] : '',
     );
@@ -62,15 +63,15 @@ class ListRedirect extends ConfigFormBase {
 
     // Header for the list of Redirects.
     $header = array(
-      array('data' => t('Path')),
-      array('data' => t('Redirect Path')),
-      array('data' => t('Checked For')),
-      array('data' => t('Roles')),
-      array('data' => t('Users')),
-      array('data' => t('Status')),
-      array('data' => t('Display Message')),
-      array('data' => t('Edit link')),
-      array('data' => t('Delete link')),
+      array('data' => $this->t('Path')),
+      array('data' => $this->t('Redirect Path')),
+      array('data' => $this->t('Checked For')),
+      array('data' => $this->t('Roles')),
+      array('data' => $this->t('Users')),
+      array('data' => $this->t('Status')),
+      array('data' => $this->t('Display Message')),
+      array('data' => $this->t('Edit link')),
+      array('data' => $this->t('Delete link')),
     );
     $rows = array();
     $output = '';
@@ -78,11 +79,11 @@ class ListRedirect extends ConfigFormBase {
 
       // Edit link.
       $edit_link = $base_url . '/admin/config/url_redirect/edit?path=' . $url[0];
-      $edit_url = Url::fromUri($edit_link);
+      $edit_url = Url::fromUri($edit_link, array('absolute' => TRUE));
 
       // Delete link.
       $delete_link = $base_url . '/admin/config/url_redirect/delete?path=' . $url[0];
-      $delete_url = Url::fromUri($delete_link);
+      $delete_url = Url::fromUri($delete_link, array('absolute' => TRUE));
 
       // Get the list of all the Roles.
       if ($url[1]) {
@@ -136,8 +137,8 @@ class ListRedirect extends ConfigFormBase {
         array('data' => $list_of_users),
         array('data' => $status),
         array('data' => $message),
-        array('data' => \Drupal::l(t('Edit'), $edit_url, array('external' => TRUE))),
-        array('data' => \Drupal::l(t('Delete'), $delete_url, array('external' => TRUE))),
+        array('data' => Link::fromTextAndUrl($this->t('Edit'), $edit_url)),
+        array('data' => Link::fromTextAndUrl($this->t('Delete'), $delete_url)),
       );
     }
     if (count($rows) > 0) {
@@ -158,7 +159,7 @@ class ListRedirect extends ConfigFormBase {
 
     else {
       $form['output'] = array(
-        '#markup' => t('No Paths available.'),
+        '#markup' => $this->t('No Paths available.'),
       );
     }
     return $form;

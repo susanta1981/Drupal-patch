@@ -4,6 +4,7 @@ namespace Drupal\url_redirect\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\user\Entity\User;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +22,13 @@ class AddRedirect extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
 
     $url = Url::fromRoute('url_redirect.list_redirects');
-    $internal_link = \Drupal::l(t('Url Redirect List'), $url);
+    $internal_link = Link::fromTextAndUrl($this->t('Url Redirect List'), $url)->toString();
     $form['goto_list'] = array(
       '#markup' => $internal_link,
     );
     $form['url'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Url Redirect'),
+      '#title' => $this->t('Url Redirect'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
     );
@@ -38,7 +39,7 @@ class AddRedirect extends ConfigFormBase {
         'placeholder' => 'Enter Path',
       ),
       '#required' => TRUE,
-      '#description' => t('This can be an internal Drupal path such as node/add, node/* Enter <front> to link to the front page.'),
+      '#description' => $this->t('This can be an internal Drupal path such as node/add, node/* Enter <front> to link to the front page.'),
     );
     $form['url']['redirect_path'] = array(
       '#type' => 'textfield',
@@ -47,15 +48,15 @@ class AddRedirect extends ConfigFormBase {
         'placeholder' => 'Enter Redirect Path',
       ),
       '#required' => TRUE,
-      '#description' => t('This redirect path can be internal Drupal path such as node/add Enter <front> to link to the front page.'),
+      '#description' => $this->t('This redirect path can be internal Drupal path such as node/add Enter <front> to link to the front page.'),
     );
 
     $form['url']['checked_for'] = array(
       '#type' => 'radios',
-      '#title' => t('Select Redirect path for'),
+      '#title' => $this->t('Select Redirect path for'),
       '#options' => array(
-        'Role' => t('Role'),
-        'User' => t('User')
+        'Role' => $this->t('Role'),
+        'User' => $this->t('User')
       ),
       '#required' => TRUE,
     );
@@ -72,7 +73,7 @@ class AddRedirect extends ConfigFormBase {
     $user_roles = user_role_names();
     $form['url']['url_roles']['roles'] = array(
       '#type' => 'select',
-      '#title' => t('Select Roles'),
+      '#title' => $this->t('Select Roles'),
       '#options' => $user_roles,
       '#multiple' => TRUE,
     );
@@ -88,36 +89,36 @@ class AddRedirect extends ConfigFormBase {
     $users = url_redirect_user_fetch();
     $form['url']['url_user']['user'] = array(
       '#type' => 'select',
-      '#title' => t('Select Users.'),
+      '#title' => $this->t('Select Users.'),
       '#options' => $users,
       '#multiple' => TRUE,
     );
     $form['url']['message'] = array(
       '#type' => 'radios',
-      '#title' => t('Display Message for Redirect'),
+      '#title' => $this->t('Display Message for Redirect'),
       '#required' => TRUE,
-      '#description' => t('Show a message for redirect path.'),
+      '#description' => $this->t('Show a message for redirect path.'),
       '#options' => array(
-        'Yes' => t('Yes'),
-        'No' => t('No')
+        'Yes' => $this->t('Yes'),
+        'No' => $this->t('No')
       ),
     );
     $form['url']['status'] = array(
       '#type' => 'radios',
-      '#title' => t('Status'),
+      '#title' => $this->t('Status'),
       '#options' => array(
-        0 => t('Disabled'),
-        1 => t('Enabled'),
+        0 => $this->t('Disabled'),
+        1 => $this->t('Enabled'),
       ),
       '#required' => TRUE,
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     );
     $form['reset'] = array(
       '#type' => 'submit',
-      '#value' => t('Reset'),
+      '#value' => $this->t('Reset'),
     );
     return $form;
   }

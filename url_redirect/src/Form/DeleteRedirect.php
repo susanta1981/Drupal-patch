@@ -29,16 +29,16 @@ class DeleteRedirect extends ConfigFormBase {
       );
       $form['delete'] = array(
         '#type' => 'submit',
-        '#value' => t('Delete'),
+        '#value' => $this->t('Delete'),
       );
       $form['no'] = array(
         '#type' => 'submit',
-        '#value' => t('No'),
+        '#value' => $this->t('No'),
       );
       return $form;
     }
     else {
-      drupal_set_message(t('Path specified is not correct for deletion.'), 'error');
+      drupal_set_message($this->t('Path specified is not correct for deletion.'), 'error');
     }
   }
 
@@ -57,7 +57,7 @@ class DeleteRedirect extends ConfigFormBase {
         ->condition('path', $delete_path)
         ->execute();
 
-      drupal_set_message(t("The path '@path' is deleted.", array('@path' => $delete_path)));
+      drupal_set_message($this->t("The path '@path' is deleted.", array('@path' => $delete_path)));
       url_redirect_redirect(Url::fromRoute('url_redirect.list_redirects')->toString());
     }
   }
