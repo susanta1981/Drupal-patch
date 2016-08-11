@@ -56,11 +56,11 @@ class LinkIconItem extends LinkItem {
   public static function elementValidateLinkIcon(&$element, FormStateInterface $form_state, $context) {
     if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
       $element['title']['#required'] = TRUE;
-      $form_state->setError($element['title'], t('!name field is required. Title must be entered if URL is provided.', array('!name' => $element['title']['#title'])));
+      $form_state->setError($element['title'], t('@name field is required. Title must be entered if URL is provided.', array('@name' => $element['title']['#title'])));
     }
     if ($element['uri']['#value'] === '' && $element['title']['#value'] !== '') {
       $element['uri']['#required'] = TRUE;
-      $form_state->setError($element['uri'], t('!name field is required. URL must be entered if title is provided.', array('!name' => $element['uri']['#title'])));
+      $form_state->setError($element['uri'], t('@name field is required. URL must be entered if title is provided.', array('@name' => $element['uri']['#title'])));
     }
   }
 
