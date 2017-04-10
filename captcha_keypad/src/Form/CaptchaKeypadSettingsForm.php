@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\captcha_keypad\Form\CaptchaKeypadSettingsForm.
+ */
+
 namespace Drupal\captcha_keypad\Form;
 
 use Drupal\comment\Entity\CommentType;
