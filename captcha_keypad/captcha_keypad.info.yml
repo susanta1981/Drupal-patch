@@ -1,0 +1,13 @@
+name: 'Captcha Keypad'
+# project: captcha_keypad
+description: 'Provides a virtual keypad to be used with captcha'
+# core: 8.x
+package: 'Spam control'
+type: module
+configure: captcha_keypad.settings_form
+
+# Information added by Drupal.org packaging script on 2017-04-06
+version: '8.x-1.0'
+core: '8.x'
+project: 'captcha_keypad'
+datestamp: 1491518590
