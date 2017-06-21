@@ -1,5 +1,0 @@
-name: 'Animate Slider'
-type: module
-description: 'An jQuery animate slider.'
-package: 'UI'
-core: 8.x
