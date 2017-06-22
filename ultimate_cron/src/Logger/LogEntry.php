@@ -190,7 +190,7 @@ class LogEntry {
     $username = t('anonymous') . ' (0)';
     if ($this->uid) {
       $user = User::load($this->uid);
-      $username = $user ? SafeMarkup::format('@username (@uid)', array('@username' => $user->getUsername(), '@uid' => $user->id())) : t('N/A');
+      $username = $user ? SafeMarkup::format('@username (@uid)', array('@username' => $user->getDisplayName(), '@uid' => $user->id())) : t('N/A');
     }
     return $username;
   }
