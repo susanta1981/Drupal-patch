@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - inmail_demo
-id: paste
-label: Paste
-plugin: paste
-configuration: {  }
