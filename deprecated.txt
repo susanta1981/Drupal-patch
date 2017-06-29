@@ -1,31 +1,12 @@
-Drupal::l
-Drupal::url
-drupal_basename
-drupal_chmod
-drupal_clear_css_cache
-drupal_clear_js_cache
-drupal_realpath
-drupal_render
-drupal_get_destination
+<?php
+define('FILE_UPLOAD_DIR', '/public_upload/');
+function save_uploaded_files() {
+  $upload = move_uploaded_file($_FILES['file']['tmp_name'], __DIR__. FILE_UPLOAD_DIR .$_FILES['file']['name']);
+  if(!$upload) {
+    throw new Exception('This file can not be upload.');
+  }
+}
 
-entity_load
-entity_load_multiple
-entity_create
-entity_delete_multiple
-entity_view
-
-file_load
-file_load_multiple
-file_uri_scheme
-format_date
-format_string
-
-node_load
-node_load_multiple
-
-SafeMarkup
-SafeMarkup::format
-SafeMarkup::checkPlain
-
-user_load
-user_load_multiple
+a. SELECT Phone FROM employees WHERE FName = 'Marry' AND LName = 'Parker'
+b. DELETE FROM employees where FName = 'Janice' AND LName = 'Greenwald';
+c. UPDATE employees SET salary = salary * 1.1 WHERE FName = 'Michael' AND LName = 'Pennington';
